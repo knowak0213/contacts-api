@@ -1,7 +1,9 @@
 package pl.student.sieciowe.contactsapi.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.student.sieciowe.contactsapi.model.Contact;
 import pl.student.sieciowe.contactsapi.model.User;
 import pl.student.sieciowe.contactsapi.repository.ContactRepository;
@@ -10,6 +12,8 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class ContactService {
 
     private final ContactRepository contactRepository;
@@ -30,10 +34,14 @@ public class ContactService {
     public Contact updateContact(Long id, Contact updatedContact) {
         return contactRepository.findById(id)
                 .map(contact -> {
-                    contact.setFirstName(updatedContact.getFirstName());
-                    contact.setLastName(updatedContact.getLastName());
-                    contact.setEmail(updatedContact.getEmail());
-                    contact.setPhoneNumber(updatedContact.getPhoneNumber());
+                    if (updatedContact.getFirstName() != null)
+                        contact.setFirstName(updatedContact.getFirstName());
+                    if (updatedContact.getLastName() != null)
+                        contact.setLastName(updatedContact.getLastName());
+                    if (updatedContact.getEmail() != null)
+                        contact.setEmail(updatedContact.getEmail());
+                    if (updatedContact.getPhoneNumber() != null)
+                        contact.setPhoneNumber(updatedContact.getPhoneNumber());
                     return contactRepository.save(contact);
                 })
                 .orElseThrow(() -> new RuntimeException("Contact not found with id: " + id));

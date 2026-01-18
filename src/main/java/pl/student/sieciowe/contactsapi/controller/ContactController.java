@@ -36,8 +36,12 @@ public class ContactController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Contact> updateContact(@PathVariable Long id, @RequestBody Contact contact) {
-        Contact updated = contactService.updateContact(id, contact);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<?> updateContact(@PathVariable Long id, @RequestBody Contact contact) {
+        try {
+            Contact updated = contactService.updateContact(id, contact);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error updating contact: " + e.getMessage());
+        }
     }
 }
