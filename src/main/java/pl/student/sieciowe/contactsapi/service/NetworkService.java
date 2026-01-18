@@ -30,14 +30,11 @@ public class NetworkService {
         return result.toString();
     }
 
-    /**
-     * UDP - Wysyła pakiet UDP do serwera i czeka na odpowiedź
-     * Wykorzystuje publiczny serwer NTP jako demonstrację
-     */
     public String testUdpConnection(String host, int port, String message) {
         StringBuilder result = new StringBuilder();
         try (DatagramSocket socket = new DatagramSocket()) {
-            socket.setSoTimeout(5000);
+            // Skracamy timeout do 1 sekundy, aby nie blokować terminala
+            socket.setSoTimeout(1000);
 
             byte[] sendData = message.getBytes(StandardCharsets.UTF_8);
             InetAddress address = InetAddress.getByName(host);
@@ -45,22 +42,23 @@ public class NetworkService {
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, address, port);
             socket.send(sendPacket);
 
-            result.append("UDP Packet SENT\n");
+            result.append("UDP Packet SENT successfully.\n");
             result.append("To: ").append(host).append(":").append(port).append("\n");
             result.append("Message: ").append(message).append("\n");
-            result.append("Packet size: ").append(sendData.length).append(" bytes\n");
 
-            // Próba odebrania odpowiedzi (może nie nadejść)
-            byte[] receiveData = new byte[1024];
-            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            // Próba odebrania odpowiedzi (opcjonalnie)
             try {
+                byte[] receiveData = new byte[1024];
+                DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 socket.receive(receivePacket);
-                result.append("Response received: ").append(receivePacket.getLength()).append(" bytes");
+                String response = new String(receivePacket.getData(), 0, receivePacket.getLength());
+                result.append("Response received: ").append(response);
             } catch (SocketTimeoutException e) {
-                result.append("No response (timeout) - normal for one-way UDP");
+                result.append(
+                        "Status: Packet sent, but no response from server (this is normal for many UDP services).");
             }
         } catch (IOException e) {
-            result.append("UDP Connection FAILED: ").append(e.getMessage());
+            result.append("UDP Error: ").append(e.getMessage());
         }
         return result.toString();
     }
