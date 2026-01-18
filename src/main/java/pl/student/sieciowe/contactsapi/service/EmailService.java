@@ -1,0 +1,45 @@
+package pl.student.sieciowe.contactsapi.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class EmailService {
+
+    private final JavaMailSender mailSender;
+
+    @Value("${spring.mail.username:noreply@contacts-api.local}")
+    private String fromEmail;
+
+    /**
+     * SMTP - Wysyła email przez skonfigurowany serwer SMTP
+     */
+    public String sendEmail(String to, String subject, String body) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(body);
+
+            mailSender.send(message);
+
+            return "Email sent successfully to: " + to;
+        } catch (Exception e) {
+            return "Email sending FAILED: " + e.getMessage();
+        }
+    }
+
+    /**
+     * Wysyła powiadomienie o nowym kontakcie
+     */
+    public String sendContactNotification(String to, String contactName) {
+        String subject = "Nowy kontakt dodany";
+        String body = "Dodano nowy kontakt: " + contactName;
+        return sendEmail(to, subject, body);
+    }
+}
