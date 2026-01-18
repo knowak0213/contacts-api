@@ -29,15 +29,16 @@ public class PhoneValidationService {
     public Map<String, Object> validatePhoneNumber(String phoneNumber) {
         Map<String, Object> result = new HashMap<>();
 
-        // Jeśli brak klucza API, zwróć demo odpowiedź
-        if (apiKey == null || apiKey.isEmpty()) {
+        // Jeśli brak klucza API lub jest on domyślny, zwróć demo odpowiedź
+        if (apiKey == null || apiKey.isEmpty() || apiKey.equals("your-api-key-here")) {
             result.put("valid", true);
             result.put("number", phoneNumber);
             result.put("country_code", "PL");
             result.put("country_name", "Poland");
-            result.put("carrier", "Demo Carrier");
+            result.put("carrier", "Demo Carrier (T-Mobile)");
             result.put("line_type", "mobile");
-            result.put("note", "Demo mode - no API key configured. Set numverify.api.key in application.properties");
+            result.put("note",
+                    "TRYB DEMO - użyto przykładowych danych ponieważ nie skonfigurowano klucza API w application.properties");
             return result;
         }
 
@@ -50,6 +51,13 @@ public class PhoneValidationService {
             Map<String, Object> response = restTemplate.getForObject(url, Map.class);
 
             if (response != null) {
+                if (Boolean.FALSE.equals(response.get("success")) || response.containsKey("error")) {
+                    result.put("valid", false);
+                    result.put("api_error", response.get("error"));
+                    result.put("note",
+                            "Błąd API (prawdopodobnie nieprawidłowy klucz). Użyj trybu DEMO usuwając klucz z pliku konfiguracyjnego.");
+                    return result;
+                }
                 return response;
             } else {
                 result.put("error", "Empty response from API");
