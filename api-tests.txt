@@ -64,7 +64,7 @@ curl.exe -X POST 'http://localhost:8080/api/network/send-email' -u test:test123 
 
 ### FTP - Eksport kontaktów (wymaga serwera FTP)
 ```powershell
-curl.exe -X POST 'http://localhost:8080/api/network/ftp-upload' -u test:test123 -H 'Content-Type: application/json' -d '{\"host\":\"ftp.example.com\",\"port\":21,\"username\":\"ftpuser\",\"password\":\"ftppass\"}'
+curl.exe -X POST 'http://localhost:8080/api/network/ftp-upload' -u test:test123 -H 'Content-Type: application/json' -d '{\"host\":\"localhost\",\"port\":21,\"username\":\"user\",\"password\":\"pass\"}'
 ```
 
 ### Lista protokołów
