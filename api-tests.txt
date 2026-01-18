@@ -1,44 +1,112 @@
-Testy API 
-1. Rejestracja
+# Testy API - Contacts API (PowerShell)
 
+**WAŻNE:** Używaj pojedynczych cudzysłowów `'...'` dla URL-i!
+**UWAGA:** Uruchom aplikację przed testami: `./mvnw spring-boot:run`
+
+---
+
+## 1. Autoryzacja
+
+### Rejestracja użytkownika
+```powershell
 curl.exe -X POST 'http://localhost:8080/api/auth/register' -H 'Content-Type: application/json' -d '{\"username\":\"test\",\"email\":\"test@test.pl\",\"password\":\"test123\"}'
+```
 
-
-2. Logowanie
-
+### Logowanie
+```powershell
 curl.exe -X POST 'http://localhost:8080/api/auth/login' -H 'Content-Type: application/json' -d '{\"username\":\"test\",\"password\":\"test123\"}'
+```
 
+---
 
-3. Pobranie kontaktów 
+## 2. CRUD Kontakty
 
-curl.exe -u test:test123 'http://localhost:8080/api/contacts'
-
-
-4. Dodanie kontaktów
-
+### CREATE - Dodaj kontakt
+```powershell
 curl.exe -X POST 'http://localhost:8080/api/contacts' -u test:test123 -H 'Content-Type: application/json' -d '{\"firstName\":\"Jan\",\"lastName\":\"Kowalski\",\"email\":\"jan@mail.com\",\"phoneNumber\":\"123456789\"}'
+```
 
-curl.exe -X POST 'http://localhost:8080/api/contacts' -u test:test123 -H 'Content-Type: application/json' -d '{\"firstName\":\"Anna\",\"lastName\":\"Nowak\",\"email\":\"anna@mail.com\",\"phoneNumber\":\"987654321\"}'
-
-
-5. Weryfikacja
-
+### READ - Lista kontaktów
+```powershell
 curl.exe -u test:test123 'http://localhost:8080/api/contacts'
+```
 
+### UPDATE - Aktualizacja kontaktu (zamień 1 na ID)
+```powershell
+curl.exe -X PUT 'http://localhost:8080/api/contacts/1' -u test:test123 -H 'Content-Type: application/json' -d '{\"firstName\":\"Jan\",\"lastName\":\"Nowak\",\"email\":\"jan.nowak@mail.com\",\"phoneNumber\":\"987654321\"}'
+```
 
-6. Usunięcie kontaktu 
-
+### DELETE - Usuń kontakt
+```powershell
 curl.exe -X DELETE 'http://localhost:8080/api/contacts/1' -u test:test123
+```
 
+---
 
-7. Bez autoryzacji 
+## 3. Protokoły Sieciowe
 
-curl.exe 'http://localhost:8080/api/contacts'
+### TCP - Test połączenia
+```powershell
+curl.exe -u test:test123 'http://localhost:8080/api/network/tcp-test'
+curl.exe -u test:test123 'http://localhost:8080/api/network/tcp-test?host=google.com&port=443'
+```
 
+### UDP - Wysłanie pakietu
+```powershell
+curl.exe -u test:test123 'http://localhost:8080/api/network/udp-test'
+curl.exe -u test:test123 'http://localhost:8080/api/network/udp-test?host=8.8.8.8&port=53&message=HelloUDP'
+```
 
-8. Bledne haslo:
+### SMTP - Wysłanie emaila (wymaga konfiguracji)
+```powershell
+curl.exe -X POST 'http://localhost:8080/api/network/send-email' -u test:test123 -H 'Content-Type: application/json' -d '{\"to\":\"email@example.com\",\"subject\":\"Test\",\"body\":\"Test message\"}'
+```
 
-curl.exe -X POST 'http://localhost:8080/api/auth/login' -H 'Content-Type: application/json' -d '{\"username\":\"test\",\"password\":\"zlehaslo\"}'
+### FTP - Eksport kontaktów (wymaga serwera FTP)
+```powershell
+curl.exe -X POST 'http://localhost:8080/api/network/ftp-upload' -u test:test123 -H 'Content-Type: application/json' -d '{\"host\":\"ftp.example.com\",\"port\":21,\"username\":\"ftpuser\",\"password\":\"ftppass\"}'
+```
 
+### Lista protokołów
+```powershell
+curl.exe -u test:test123 'http://localhost:8080/api/network/protocols'
+```
 
+---
 
+## 4. Zewnętrzne API
+
+### Walidacja numeru telefonu
+```powershell
+curl.exe -u test:test123 'http://localhost:8080/api/external/validate-phone/48123456789'
+```
+
+### Sprawdzenie formatu numeru
+```powershell
+curl.exe -u test:test123 'http://localhost:8080/api/external/check-format/+48123456789'
+```
+
+---
+
+## 5. Pełny scenariusz testowy
+
+```powershell
+# 1. Rejestracja
+curl.exe -X POST 'http://localhost:8080/api/auth/register' -H 'Content-Type: application/json' -d '{\"username\":\"demo\",\"email\":\"demo@test.pl\",\"password\":\"demo123\"}'
+
+# 2. Dodaj kontakty
+curl.exe -X POST 'http://localhost:8080/api/contacts' -u demo:demo123 -H 'Content-Type: application/json' -d '{\"firstName\":\"Anna\",\"lastName\":\"Nowak\",\"email\":\"anna@mail.com\",\"phoneNumber\":\"111222333\"}'
+curl.exe -X POST 'http://localhost:8080/api/contacts' -u demo:demo123 -H 'Content-Type: application/json' -d '{\"firstName\":\"Piotr\",\"lastName\":\"Kowalski\",\"email\":\"piotr@mail.com\",\"phoneNumber\":\"444555666\"}'
+
+# 3. Lista kontaktów
+curl.exe -u demo:demo123 'http://localhost:8080/api/contacts'
+
+# 4. Test TCP
+curl.exe -u demo:demo123 'http://localhost:8080/api/network/tcp-test'
+
+# 5. Test UDP
+curl.exe -u demo:demo123 'http://localhost:8080/api/network/udp-test'
+
+# 6. Walidacja telefonu
+curl.exe -u demo:demo123 'http://localhost:8080/api/external/validate-phone/48111222333'
+```
