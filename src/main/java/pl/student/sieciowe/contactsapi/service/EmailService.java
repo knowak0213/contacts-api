@@ -19,6 +19,12 @@ public class EmailService {
      * SMTP - Wysyła email przez skonfigurowany serwer SMTP
      */
     public String sendEmail(String to, String subject, String body) {
+        // Jeśli dane logowania są domyślne, przejdź w tryb dry-run (symulacja)
+        if (fromEmail.equals("your-email@gmail.com")) {
+            return "Email DRY-RUN SUCCESS (No email configured in application.properties). To: " + to + ", Subject: "
+                    + subject;
+        }
+
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail);
@@ -30,7 +36,11 @@ public class EmailService {
 
             return "Email sent successfully to: " + to;
         } catch (Exception e) {
-            return "Email sending FAILED: " + e.getMessage();
+            String errorMsg = e.getMessage();
+            if (errorMsg != null && errorMsg.contains("Authentication failed")) {
+                return "Email sending FAILED: Authentication failed. Sprawdź e-mail i HASŁO APLIKACJI w application.properties.";
+            }
+            return "Email sending FAILED: " + errorMsg;
         }
     }
 
