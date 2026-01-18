@@ -1,0 +1,44 @@
+Testy API 
+1. Rejestracja
+
+curl.exe -X POST 'http://localhost:8080/api/auth/register' -H 'Content-Type: application/json' -d '{\"username\":\"test\",\"email\":\"test@test.pl\",\"password\":\"test123\"}'
+
+
+2. Logowanie
+
+curl.exe -X POST 'http://localhost:8080/api/auth/login' -H 'Content-Type: application/json' -d '{\"username\":\"test\",\"password\":\"test123\"}'
+
+
+3. Pobranie kontaktów 
+
+curl.exe -u test:test123 'http://localhost:8080/api/contacts'
+
+
+4. Dodanie kontaktów
+
+curl.exe -X POST 'http://localhost:8080/api/contacts' -u test:test123 -H 'Content-Type: application/json' -d '{\"firstName\":\"Jan\",\"lastName\":\"Kowalski\",\"email\":\"jan@mail.com\",\"phoneNumber\":\"123456789\"}'
+
+curl.exe -X POST 'http://localhost:8080/api/contacts' -u test:test123 -H 'Content-Type: application/json' -d '{\"firstName\":\"Anna\",\"lastName\":\"Nowak\",\"email\":\"anna@mail.com\",\"phoneNumber\":\"987654321\"}'
+
+
+5. Weryfikacja
+
+curl.exe -u test:test123 'http://localhost:8080/api/contacts'
+
+
+6. Usunięcie kontaktu 
+
+curl.exe -X DELETE 'http://localhost:8080/api/contacts/1' -u test:test123
+
+
+7. Bez autoryzacji 
+
+curl.exe 'http://localhost:8080/api/contacts'
+
+
+8. Bledne haslo:
+
+curl.exe -X POST 'http://localhost:8080/api/auth/login' -H 'Content-Type: application/json' -d '{\"username\":\"test\",\"password\":\"zlehaslo\"}'
+
+
+
