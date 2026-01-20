@@ -83,9 +83,13 @@ curl.exe -u test:test123 'http://localhost:8080/api/network/protocols'
 curl.exe -u test:test123 'http://localhost:8080/api/external/validate-phone/48123456789'
 ```
 
-### Sprawdzenie formatu numeru
+### Walidacja numerów z bazy danych
 ```powershell
-curl.exe -u test:test123 'http://localhost:8080/api/external/check-format/+48123456789'
+# 1. Sprawdzenie formatu wszystkich zapisanych kontaktów (lokalnie)
+curl.exe -u test:test123 'http://localhost:8080/api/external/check-stored-format'
+
+# 2. Walidacja wszystkich zapisanych kontaktów przez API (NumVerify)
+curl.exe -u test:test123 'http://localhost:8080/api/external/validate-stored-contacts'
 ```
 
 ---
