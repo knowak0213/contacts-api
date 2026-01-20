@@ -5,7 +5,7 @@ Aplikacja REST API do zarządzania kontaktami z demonstracją protokołów sieci
 ## Technologie
 
 - **Java 17** + Spring Boot 3.5
-- **PostgreSQL** - baza danych
+- **H2 / PostgreSQL** - baza danych (domyślnie H2 - bezinstalacyjna)
 - **Spring Security** - uwierzytelnianie (Basic Auth + Form Login)
 - **Spring Data JPA** - ORM
 - **Apache Commons Net** - FTP
@@ -14,20 +14,22 @@ Aplikacja REST API do zarządzania kontaktami z demonstracją protokołów sieci
 ## Wymagania
 
 - Java 17+
-- Docker (dla PostgreSQL)
 - Maven
+- Docker (opcjonalnie, dla PostgreSQL i lokalnego FTP)
 
 ## Uruchomienie
+Aplikacja jest skonfigurowana tak, aby działała bez zewnętrznych zależności (korzysta z bazy plikowej H2).
 
 ```bash
-# 1. Uruchom bazę danych PostgreSQL
-docker-compose up -d
-
-# 2. Uruchom aplikację
+# Uruchom aplikację
 ./mvnw spring-boot:run
 ```
 
 Aplikacja działa na: `http://localhost:8080`
+Konsola bazy danych H2: `http://localhost:8080/h2-console`
+- JDBC URL: `jdbc:h2:file:./contacts_db`
+- User: `sa`
+- Password: (zostaw puste)
 
 ## Domyślni użytkownicy
 

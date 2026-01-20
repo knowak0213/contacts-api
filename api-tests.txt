@@ -33,7 +33,7 @@ curl.exe -u test:test123 'http://localhost:8080/api/contacts'
 
 ### UPDATE - Aktualizacja kontaktu
 ```powershell
-curl.exe -X PUT 'http://localhost:8080/api/contacts/1' -u test:test123 -H 'Content-Type: application/json' -d '{\"firstName\":\"Jan\",\"lastName\":\"Nowak\",\"email\":\"jan.nowak@mail.com\",\"phoneNumber\":\"987654321\"}'
+curl.exe -X PUT 'http://localhost:8080/api/contacts/3' -u test:test123 -H 'Content-Type: application/json' -d '{\"firstName\":\"Jan\",\"lastName\":\"Nowak\",\"email\":\"jan.nowak@mail.com\",\"phoneNumber\":\"987654321\"}'
 ```
 
 ### DELETE - Usuń kontakt
@@ -57,7 +57,7 @@ curl.exe -u test:test123 'http://localhost:8080/api/network/udp-test'
 curl.exe -u test:test123 'http://localhost:8080/api/network/udp-test?host=8.8.8.8&port=53&message=HelloUDP'
 ```
 
-### SMTP - Wysłanie emaila (wymaga konfiguracji lub użycia domyślnego maila dla DRY-RUN)
+### SMTP - Wysłanie emaila
 ```powershell
 curl.exe -X POST 'http://localhost:8080/api/network/send-email' -u test:test123 -H 'Content-Type: application/json' -d '{\"to\":\"test.przyklad2@ogarnij.se\",\"subject\":\"Test\",\"body\":\"Test_wiadomosc\"}'
 ```
