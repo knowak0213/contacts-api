@@ -19,12 +19,6 @@ public class EmailService {
      * SMTP - Wysyła email przez skonfigurowany serwer SMTP
      */
     public String sendEmail(String to, String subject, String body) {
-        // Jeśli dane logowania są domyślne, przejdź w tryb dry-run (symulacja)
-        if (fromEmail.equals("your-email@gmail.com")) {
-            return "Email DRY-RUN SUCCESS (No email configured in application.properties). To: " + to + ", Subject: "
-                    + subject;
-        }
-
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail);
@@ -44,9 +38,6 @@ public class EmailService {
         }
     }
 
-    /**
-     * Wysyła powiadomienie o nowym kontakcie
-     */
     public String sendContactNotification(String to, String contactName) {
         String subject = "Nowy kontakt dodany";
         String body = "Dodano nowy kontakt: " + contactName;
