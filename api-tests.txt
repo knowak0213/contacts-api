@@ -63,15 +63,16 @@ curl.exe -X POST 'http://localhost:8080/api/network/send-email' -u test:test123 
 ```
 
 
-### FTP - Eksport kontaktów (wymaga serwera FTP)
-```powershell
+### FTP - Eksport kontaktów
+# Opcja A: Serwer lokalny (Docker)
 curl.exe -X POST 'http://localhost:8080/api/network/ftp-upload' -u test:test123 -H 'Content-Type: application/json' -d '{\"host\":\"localhost\",\"port\":21,\"username\":\"user\",\"password\":\"pass\"}'
-```
+
+# Opcja B: Serwer prowadzącego
+curl.exe -X POST 'http://localhost:8080/api/network/ftp-upload' -u test:test123 -H 'Content-Type: application/json' -d '{\"host\":\"ftp.example.com\",\"port\":21,\"username\":\"student\",\"password\":\"haslo\"}'
 
 ### Lista protokołów
-```powershell
 curl.exe -u test:test123 'http://localhost:8080/api/network/protocols'
-```
+
 
 ---
 
